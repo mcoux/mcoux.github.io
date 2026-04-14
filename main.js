@@ -12,21 +12,37 @@ const winWidth = window.innerWidth;
 const winHeight = window.innerHeight;
 
 const scene = new three.Scene();
-const cam = new three.PerspectiveCamera(80, winWidth / winHeight, 0.1,1000);
+const cam = new three.PerspectiveCamera(90, winWidth / winHeight, 0.1,1000);
 const render = new three.WebGLRenderer({
     canvas : document.querySelector('#glcanvas'),
 });
+//Couleurs/Mats
+const PLANE_COLOR = {color: 0xAAAAAA}
+const MTN_COLOR = {color: 0xBBBBBB}
+const SUN_COLOR = {color: 0xFFFFFF}
+const BG_COLOR = {color: 0x000000}
 
-const PLANE_COLOR = {color: 0x2e7514}
-const MTN_COLOR = {color: 0x0e2b10}
-const SUN_COLOR = {color: 0xFFFFAA}
-const BG_COLOR = {color: 0x3c7ab5}
+//Variables géometrie
+const GRID_SIZE = 300
 
+//Autres Variables
+const CAM_BASE_Y = 20
+const SCROLL_COEFF = 0.004
+
+const pyrMaterial = new three.MeshBasicMaterial({
+    color: 0xFFFFFF,
+    wireframe: true,
+})
+
+const planeMaterial = new three.MeshBasicMaterial({
+    color: 0xFF0000,
+    wireframe: true,
+})
 
 render.setPixelRatio(window.devicePixelRatio);
 render.setSize(winWidth,winHeight);
 cam.position.setZ(30);
-cam.position.setY(10);
+cam.position.setY(CAM_BASE_Y);
 
 render.render(scene, cam);
 
@@ -34,7 +50,7 @@ render.render(scene, cam);
 //BloomRenderer
 const bloomRender = new RenderPass(scene,cam);
 const bloomP = new UnrealBloomPass( new three.Vector2(winWidth,winHeight),1.5,0.4,0.85);
-bloomP.threshold = 0;
+bloomP.threshold = 1;
 bloomP.strength = 2;
 bloomP.radius = 0;
 const bloomComposer = new EffectComposer(render);
@@ -47,7 +63,7 @@ bloomComposer.addPass(bloomP);
 const sphere = new three.SphereGeometry(5);
 
 const matS = new three.MeshPhongMaterial(SUN_COLOR);
-matS.emissive.set(0xFFFF55);
+matS.emissive.set(0xFFFFFF);
 matS.specular.set(0xFFFFFF);
 matS.shininess = 50;
 
@@ -56,25 +72,29 @@ soleil.position.set(0,10,-60)
 
 
 //Plan
-const GeomP = new three.PlaneGeometry(200,200);
-const matP = new three.MeshBasicMaterial(PLANE_COLOR);
-const plane = new three.Mesh(GeomP, matP);
-plane.rotateX(MathUtils.DEG2RAD*-90);
-scene.add( plane );
+// const GeomP = new three.PlaneGeometry(200,200);
+// const matP = new three.MeshBasicMaterial(PLANE_COLOR);
+// const plane = new three.Mesh(GeomP, matP);
+// plane.rotateX(MathUtils.DEG2RAD*-90);
+// plane.material = planeMaterial;
+// scene.add( plane );
 
 //pyramide
 const geomPyr = new three.ConeGeometry(10, 20,3);
 const matPyr = new three.MeshBasicMaterial(MTN_COLOR);
 const pyr = new three.Mesh(geomPyr,matPyr);
-
+pyr.material = pyrMaterial;
 pyr.position.set(20,10,-50);
 scene.add(pyr)
 
 
 const ambient = new three.AmbientLight(0xFFFFFF);
 
+//Grille
+const gridHelper = new three.GridHelper(GRID_SIZE, 10, 0xFF0000, 0xFF0000)
+scene.add(gridHelper)
 
-
+//Axes
 const axesHelper = new three.AxesHelper( 5 );
 scene.add( axesHelper );
 
@@ -85,11 +105,11 @@ scene.add( axesHelper );
 scene.add(ambient);
 
 scene.add(soleil);
-scene.background = new three.Color(0x3c7ab5);
+scene.background = BG_COLOR;
 
 function moveCam(){
     const t =document.body.getBoundingClientRect().top;
-    cam.position.y = 10 + t*0.004;
+    cam.position.y = CAM_BASE_Y + t*SCROLL_COEFF;
 }
 
 document.body.onscroll = moveCam;
@@ -103,7 +123,7 @@ function animate(){
     //controls.update();
 
     render.render(scene, cam);
-    //bloomComposer.render();
+    bloomComposer.render();
 }
 
 animate()
