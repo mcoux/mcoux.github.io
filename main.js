@@ -67,6 +67,12 @@ matS.emissive.set(0xFFFFFF);
 matS.specular.set(0xFFFFFF);
 matS.shininess = 50;
 
+const matPyrEmm = new three.MeshPhongMaterial(SUN_COLOR);
+matPyrEmm.emissive.set(0xFFFFFF);
+matPyrEmm.specular.set(0xFFFFFF);
+matPyrEmm.shininess = 50;
+matPyrEmm.wireframe = true;
+
 const soleil = new three.Mesh(sphere,matS);
 soleil.position.set(0,10,-60)
 
@@ -83,7 +89,7 @@ soleil.position.set(0,10,-60)
 const geomPyr = new three.ConeGeometry(10, 20,3);
 const matPyr = new three.MeshBasicMaterial(MTN_COLOR);
 const pyr = new three.Mesh(geomPyr,matPyr);
-pyr.material = pyrMaterial;
+pyr.material = matPyrEmm;
 pyr.position.set(20,10,-50);
 scene.add(pyr)
 
