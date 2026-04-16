@@ -23,8 +23,12 @@ const SUN_COLOR = {color: 0xFFFFFF}
 const BG_COLOR = {color: 0x000000}
 
 //Variables géometrie
-const GRID_SIZE = 300
+const GRID_SIZE = 300;
+const SUN_POS = new three.Vector3(0,10,-60);   
 
+//Pyramides
+const PYR_NB = 5;
+const PYR_RADIUS = 30;
 //Autres Variables
 const CAM_BASE_Y = 20
 const SCROLL_COEFF = 0.004
@@ -74,7 +78,7 @@ matPyrEmm.shininess = 50;
 matPyrEmm.wireframe = true;
 
 const soleil = new three.Mesh(sphere,matS);
-soleil.position.set(0,10,-60)
+soleil.position.set(SUN_POS.x,SUN_POS.y,SUN_POS.z);
 
 
 //Plan
@@ -87,12 +91,26 @@ soleil.position.set(0,10,-60)
 
 //pyramide
 const geomPyr = new three.ConeGeometry(10, 20,3);
-const matPyr = new three.MeshBasicMaterial(MTN_COLOR);
-const pyr = new three.Mesh(geomPyr,matPyr);
-pyr.material = matPyrEmm;
+var pyr = new three.Mesh(geomPyr,matPyrEmm);
 pyr.position.set(20,10,-50);
 scene.add(pyr)
+pyr = new three.Mesh(geomPyr,matPyrEmm);
+pyr.position.set(-20,10,-50);
+scene.add(pyr)
 
+//Placement des pyramides
+var angle = 0;
+var rotation = 0;
+/*
+Pour i de 0 à NB_PYR  {
+    angle = i*2PI/NB_PYR
+    pyr = new three.Mesh(geomPyr,matPyrEmm);
+    pyr.position.set(cos(angle)*rad,0,sin(angle)*rad);
+    scene.add(pyr)
+}
+
+
+*/
 
 const ambient = new three.AmbientLight(0xFFFFFF);
 
