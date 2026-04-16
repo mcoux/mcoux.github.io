@@ -118,6 +118,20 @@ blockquote p {
   border-radius: 20px;
 }
 
+.expContainerSection{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.expBlock{
+  background-color: rgba(30, 30, 30, 0.75);
+  padding: 15px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  width: max-content;
+  border-radius: 20px;
+}
+
 a {
   color: rgb(0,  180, 255);
 }
