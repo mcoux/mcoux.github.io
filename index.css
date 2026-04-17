@@ -135,3 +135,7 @@ blockquote p {
 a {
   color: rgb(0,  180, 255);
 }
+
+.desc{
+  width: 50;
+}
