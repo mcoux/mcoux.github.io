@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "npx": "^10.2.2",
+    "npx": "^3.0.0",
     "three": "^0.171.0"
   },
   "devDependencies": {
-    "vite": "^6.0.2"
+    "vite": "^6.4.2"
   }
 }
