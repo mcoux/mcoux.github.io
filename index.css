@@ -173,5 +173,8 @@ a {
 
 .tab {
   display: none;
+}
 
+.tab.default-tab {
+  display: block;
 }

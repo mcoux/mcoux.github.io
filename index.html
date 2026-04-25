@@ -29,12 +29,10 @@
         document.getElementById(tabName).style.display = "block";
         ebt.currentTarget.className += " active";
       }
-      document.getElementById("default").click();
   </script>
   <main>
-            <a id="main-page-link" href="index.html">
               <h2 class="text">Maxime Coux</h2>
-            </a>
+            
     
 
 
@@ -154,18 +152,19 @@
       <nav>
         <ul class="nav-list">
           <li class="nav-button text">
-            <button class="nav-button text tabBtn" onclick="openTab(event,'Pro')" id="default">
+            <a class="nav-link text tabBtn" onclick="openTab(event,'Pro')">
               Experiences professionnelles
-            </button>          </li>
-          <li class="nav-button text">
-            <button class="nav-button text tabBtn" onclick="openTab(event,'Univ')" >
-              Projets Universitaires
-            </button>          
+            </a>          
           </li>
           <li class="nav-button text">
-            <button class="nav-button text tabBtn" onclick="openTab(event,'Form')">
+            <a class="nav-link text tabBtn" onclick="openTab(event,'Univ')" >
+              Projets Universitaires
+            </a>          
+          </li>
+          <li class="nav-button text">
+            <a class="nav-link text tabBtn" onclick="openTab(event,'Form')">
               Formations
-            </button>          
+            </a>          
           </li>
       </ul>
       </nav>
@@ -173,7 +172,7 @@
 
 
     <!--Exp Pros-->
-    <div class="tab" id="Pro">
+    <div class="tab default-tab" id="Pro">
       <div class="text-block">
         <h3 class="text title"> Experiences professionnelles: </h3>
       </div>
@@ -191,7 +190,7 @@
           <li> Organisation du travail du groupe</li>
           <li>Répartition et plannification des tâches à effectuer</li>
           <li>Développement sous Godot, en GDScript</li>
-          <li>Création d’assets 2D dans un style Pixel Art/li>
+          <li>Création d’assets 2D dans un style Pixel Art</li>
         </ul>
         <p> Langages et Frameworks: </p>
         <ul>
