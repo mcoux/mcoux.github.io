@@ -153,10 +153,3 @@ function animate(){
 animate()
 
 
-//Tabs display
-function openTab(ebt, tabName){
-    var contents = document.getElementsByClassName("tab");
-    for (var i = 0; i < contents.length; i++) {
-        contents[i].style.display = "none";
-      }
-}

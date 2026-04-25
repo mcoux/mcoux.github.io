@@ -14,6 +14,23 @@
 <body>
   <canvas id="glcanvas">
   </canvas>
+  <script>
+      function openTab(ebt, tabName) {
+        var contents = document.getElementsByClassName("tab");
+        for (var i = 0; i < contents.length; i++) {
+          contents[i].style.display = "none";
+        }
+
+        var tabButtons = document.getElementsByClassName("tabBtn");
+        for (i = 0; i < tabButtons.length; i++) {
+          tabButtons[i].className = tabButtons[i].className.replace(" active", "");
+        }
+
+        document.getElementById(tabName).style.display = "block";
+        ebt.currentTarget.className += " active";
+      }
+      document.getElementById("default").click();
+  </script>
   <main>
             <a id="main-page-link" href="index.html">
               <h2 class="text">Maxime Coux</h2>
@@ -137,16 +154,16 @@
       <nav>
         <ul class="nav-list">
           <li class="nav-button text">
-            <button class="nav-button text tabBtn">
+            <button class="nav-button text tabBtn" onclick="openTab(event,'Pro')" id="default">
               Experiences professionnelles
             </button>          </li>
           <li class="nav-button text">
-            <button class="nav-button text tabBtn">
+            <button class="nav-button text tabBtn" onclick="openTab(event,'Univ')" >
               Projets Universitaires
             </button>          
           </li>
           <li class="nav-button text">
-            <button class="nav-button text tabBtn">
+            <button class="nav-button text tabBtn" onclick="openTab(event,'Form')">
               Formations
             </button>          
           </li>
@@ -156,7 +173,7 @@
 
 
     <!--Exp Pros-->
-    <div class="tab">
+    <div class="tab" id="Pro">
       <div class="text-block">
         <h3 class="text title"> Experiences professionnelles: </h3>
       </div>
@@ -237,7 +254,7 @@
     </div>
  
     <!--Exp Univ-->
-<div class="tab">
+<div class="tab" id="Univ">
   <div class="text-block">
     <h3 class="text title"> Mes projets : </h3>
   </div>
@@ -319,7 +336,7 @@
 </div>
 
 <!--Formation-->
-<div class="tab">
+<div class="tab" id="Form">
   <div class="block">
     <h3 class="text title"> Formations effectués : </h3>
 

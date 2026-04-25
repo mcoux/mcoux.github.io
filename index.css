@@ -170,3 +170,8 @@ a {
 .nav-button:hover{
     background-color:red;
 }
+
+.tab {
+  display: none;
+
+}
