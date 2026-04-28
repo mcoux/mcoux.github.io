@@ -35,9 +35,9 @@ const MAX_HEIGHT = 20;
 const MIN_HEIGHT = 10;
 
 //Camera
-const CAM_BASE_Y = 40
-const SCROLL_COEFF = 0.01
-const CAM_BASE_ANGLE
+const CAM_BASE_Y = 40;
+const SCROLL_COEFF = 0.01;
+const CAM_BASE_ANGLE = 0;
 
 const pyrMaterial = new three.MeshBasicMaterial({
     color: 0xFFFFFF,
