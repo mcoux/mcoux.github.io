@@ -7,6 +7,7 @@ import './index.css'
 import * as three from 'three'
 import { EffectComposer, RenderPass } from 'three/examples/jsm/Addons.js';
 import { bloom } from 'three/examples/jsm/tsl/display/BloomNode.js';
+import { cos, sin } from 'three/tsl';
 
 const winWidth = window.innerWidth;
 const winHeight = window.innerHeight;
@@ -27,11 +28,16 @@ const GRID_SIZE = 300;
 const SUN_POS = new three.Vector3(0,10,-60);   
 
 //Pyramides
-const PYR_NB = 5;
-const PYR_RADIUS = 30;
-//Autres Variables
-const CAM_BASE_Y = 20
-const SCROLL_COEFF = 0.004
+const NB_PYR = 10;
+const NB_ROWS = 5;
+const PYR_RADIUS = 40;
+const MAX_HEIGHT = 20;
+const MIN_HEIGHT = 10;
+
+//Camera
+const CAM_BASE_Y = 40
+const SCROLL_COEFF = 0.01
+const CAM_BASE_ANGLE
 
 const pyrMaterial = new three.MeshBasicMaterial({
     color: 0xFFFFFF,
@@ -67,7 +73,7 @@ bloomComposer.addPass(bloomP);
 const sphere = new three.SphereGeometry(5);
 
 const matS = new three.MeshPhongMaterial(SUN_COLOR);
-matS.emissive.set(0xFFFFFF);
+matS.emissive.set(0x000000);
 matS.specular.set(0xFFFFFF);
 matS.shininess = 50;
 
@@ -90,27 +96,36 @@ soleil.position.set(SUN_POS.x,SUN_POS.y,SUN_POS.z);
 // scene.add( plane );
 
 //pyramide
-const geomPyr = new three.ConeGeometry(10, 20,3);
+var geomPyr = new three.ConeGeometry(10, 20,3);
 var pyr = new three.Mesh(geomPyr,matPyrEmm);
 pyr.position.set(20,10,-50);
-scene.add(pyr)
-pyr = new three.Mesh(geomPyr,matPyrEmm);
-pyr.position.set(-20,10,-50);
-scene.add(pyr)
+
 
 //Placement des pyramides
 var angle = 0;
+var base_angle = 2*Math.PI/NB_PYR;
 var rotation = 0;
-/*
-Pour i de 0 à NB_PYR  {
-    angle = i*2PI/NB_PYR
-    pyr = new three.Mesh(geomPyr,matPyrEmm);
-    pyr.position.set(cos(angle)*rad,0,sin(angle)*rad);
-    scene.add(pyr)
+var i = 0;
+var rotation
+var height
+var j = 0;
+
+for(j = 1;j<=NB_ROWS;j++){
+    for(i =0;i<NB_PYR;i++){        
+        angle = i*base_angle + base_angle/2; // Little offset
+        height = Math.random() * (MAX_HEIGHT + MIN_HEIGHT) + MIN_HEIGHT;
+        geomPyr = new three.ConeGeometry(10, height,3);
+        pyr = new three.Mesh(geomPyr,pyrMaterial);
+        pyr.position.set(soleil.position.x-Math.sin(angle)*PYR_RADIUS*j,height/2,soleil.position.z-Math.cos(angle)*PYR_RADIUS*j)
+        console.log("Placing PYR at "+pyr.position.x)
+    
+        scene.add(pyr)
+    }
+    
 }
 
 
-*/
+
 
 const ambient = new three.AmbientLight(0xFFFFFF);
 
