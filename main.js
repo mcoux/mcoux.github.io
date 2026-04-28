@@ -8,15 +8,9 @@ import * as three from 'three'
 import { EffectComposer, RenderPass } from 'three/examples/jsm/Addons.js';
 import { bloom } from 'three/examples/jsm/tsl/display/BloomNode.js';
 import { cos, sin } from 'three/tsl';
+import { degToRad } from 'three/src/math/MathUtils.js';
 
-const winWidth = window.innerWidth;
-const winHeight = window.innerHeight;
 
-const scene = new three.Scene();
-const cam = new three.PerspectiveCamera(90, winWidth / winHeight, 0.1,1000);
-const render = new three.WebGLRenderer({
-    canvas : document.querySelector('#glcanvas'),
-});
 //Couleurs/Mats
 const PLANE_COLOR = {color: 0xAAAAAA}
 const MTN_COLOR = {color: 0xBBBBBB}
@@ -38,6 +32,17 @@ const MIN_HEIGHT = 10;
 const CAM_BASE_Y = 40;
 const SCROLL_COEFF = 0.01;
 const CAM_BASE_ANGLE = 0;
+
+const winWidth = window.innerWidth;
+const winHeight = window.innerHeight;
+
+const scene = new three.Scene();
+const cam = new three.PerspectiveCamera(90, winWidth / winHeight, 0.1,1000);
+cam.rotateX(degToRad(Math.atan((CAM_BASE_Y-10)/SUN_POS.z)))
+const render = new three.WebGLRenderer({
+    canvas : document.querySelector('#glcanvas'),
+});
+
 
 const pyrMaterial = new three.MeshBasicMaterial({
     color: 0xFFFFFF,
