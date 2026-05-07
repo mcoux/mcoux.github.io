@@ -18,19 +18,22 @@ const SUN_COLOR = {color: 0xFFFFFF}
 const BG_COLOR = {color: 0x000000}
 
 //Variables géometrie
-const GRID_SIZE = 300;
+const GRID_SIZE = 1000;
 const SUN_POS = new three.Vector3(0,10,-60);   
 
 //Pyramides
-const NB_PYR = 10;
+const BASE_PYR_NB = 10;
 const NB_ROWS = 5;
 const PYR_RADIUS = 40;
 const MAX_HEIGHT = 20;
 const MIN_HEIGHT = 10;
-
+const MAX_WIDTH = 10;
+const MIN_WIDTH = 5;
 //Camera
 const CAM_BASE_Y = 40;
 const SCROLL_COEFF = 0.01;
+const ROTATE_COEFF = 0.0001;
+const MIN_DOCUMENT_HEIGHT = 1137;
 const CAM_BASE_ANGLE = 0;
 
 const winWidth = window.innerWidth;
@@ -38,7 +41,6 @@ const winHeight = window.innerHeight;
 
 const scene = new three.Scene();
 const cam = new three.PerspectiveCamera(90, winWidth / winHeight, 0.1,1000);
-cam.rotateX(degToRad(Math.atan((CAM_BASE_Y-10)/SUN_POS.z)))
 const render = new three.WebGLRenderer({
     canvas : document.querySelector('#glcanvas'),
 });
@@ -58,7 +60,10 @@ render.setPixelRatio(window.devicePixelRatio);
 render.setSize(winWidth,winHeight);
 cam.position.setZ(30);
 cam.position.setY(CAM_BASE_Y);
+//cam.rotation.x = CAM_BASE_ANGLE;
+cam.rotateX(degToRad(Math.atan((CAM_BASE_Y-10)/SUN_POS.z)))
 
+console.log(cam.rotation.x/Math.rad)
 render.render(scene, cam);
 
 
@@ -78,7 +83,7 @@ bloomComposer.addPass(bloomP);
 const sphere = new three.SphereGeometry(5);
 
 const matS = new three.MeshPhongMaterial(SUN_COLOR);
-matS.emissive.set(0x000000);
+matS.emissive.set(0xFFFFFF);
 matS.specular.set(0xFFFFFF);
 matS.shininess = 50;
 
@@ -108,25 +113,30 @@ pyr.position.set(20,10,-50);
 
 //Placement des pyramides
 var angle = 0;
-var base_angle = 2*Math.PI/NB_PYR;
 var rotation = 0;
 var i = 0;
+var base_angle;
 var rotation
 var height
 var j = 0;
-
+var pyr_nb = BASE_PYR_NB
+var width;
 for(j = 1;j<=NB_ROWS;j++){
-    for(i =0;i<NB_PYR;i++){        
+    base_angle = 2*Math.PI/pyr_nb;
+
+    for(i =0;i<pyr_nb;i++){        
         angle = i*base_angle + base_angle/2; // Little offset
         height = Math.random() * (MAX_HEIGHT + MIN_HEIGHT) + MIN_HEIGHT;
-        geomPyr = new three.ConeGeometry(10, height,3);
+        width = Math.random() * (MAX_WIDTH + MIN_WIDTH) + MIN_WIDTH;
+        rotation = Math.random()*180;
+        geomPyr = new three.ConeGeometry(width, height,3);
         pyr = new three.Mesh(geomPyr,pyrMaterial);
         pyr.position.set(soleil.position.x-Math.sin(angle)*PYR_RADIUS*j,height/2,soleil.position.z-Math.cos(angle)*PYR_RADIUS*j)
-        console.log("Placing PYR at "+pyr.position.x)
+        pyr.rotateY(rotation);
     
         scene.add(pyr)
     }
-    
+    pyr_nb+=5;
 }
 
 
@@ -152,8 +162,14 @@ scene.add(soleil);
 scene.background = BG_COLOR;
 
 function moveCam(){
-    const t =document.body.getBoundingClientRect().top;
-    cam.position.y = CAM_BASE_Y + t*SCROLL_COEFF;
+    const t =document.documentElement.scrollTop;
+    if(t >MIN_DOCUMENT_HEIGHT){
+        return
+    }
+    cam.position.y = CAM_BASE_Y + t*SCROLL_COEFF *-1;
+    cam.rotation.x = CAM_BASE_ANGLE + t*ROTATE_COEFF*1
+    console.log(document.documentElement.scrollHeight - document.documentElement.clientHeight);
+
 }
 
 document.body.onscroll = moveCam;
@@ -173,3 +189,11 @@ function animate(){
 animate()
 
 
+/**
+scrollPercent = (document.documentElement.scrollTop / (document.documentElement.scrollHeight - document.documentElement.clientHeight)) * 100
+
+ 2531
+3127
+2033
+2531
+ */
