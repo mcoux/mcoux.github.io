@@ -7,8 +7,8 @@ import './index.css'
 import * as three from 'three'
 import { EffectComposer, RenderPass } from 'three/examples/jsm/Addons.js';
 import { bloom } from 'three/examples/jsm/tsl/display/BloomNode.js';
-import { cos, sin } from 'three/tsl';
-import { degToRad } from 'three/src/math/MathUtils.js';
+import { abs, cos, sin } from 'three/tsl';
+import { degToRad, radToDeg } from 'three/src/math/MathUtils.js';
 
 
 //Couleurs/Mats
@@ -18,37 +18,39 @@ const SUN_COLOR = {color: 0xFFFFFF}
 const BG_COLOR = {color: 0x000000}
 
 //Variables géometrie
-const GRID_SIZE = 1000;
+const GRID_SIZE = 900;
 const SUN_POS = new three.Vector3(0,10,-60);   
 
 //Pyramides
 const BASE_PYR_NB = 10;
-const NB_ROWS = 5;
-const PYR_RADIUS = 40;
+const NB_ROWS = 7;
+const PYR_RADIUS = 50;
 const MAX_HEIGHT = 20;
 const MIN_HEIGHT = 10;
 const MAX_WIDTH = 10;
 const MIN_WIDTH = 5;
 //Camera
-const CAM_BASE_Y = 40;
+const CAM_BASE_Y = 30;
+const CAM_Z = 100;
+
 const SCROLL_COEFF = 0.01;
 const ROTATE_COEFF = 0.0001;
 const MIN_DOCUMENT_HEIGHT = 1137;
-const CAM_BASE_ANGLE = 0;
+const CAM_BASE_ANGLE = -Math.PI/2;
 
 const winWidth = window.innerWidth;
 const winHeight = window.innerHeight;
 
 const scene = new three.Scene();
-const cam = new three.PerspectiveCamera(90, winWidth / winHeight, 0.1,1000);
+const cam = new three.PerspectiveCamera(70, winWidth / winHeight, 0.1,1000);
 const render = new three.WebGLRenderer({
     canvas : document.querySelector('#glcanvas'),
 });
 
 
 const pyrMaterial = new three.MeshBasicMaterial({
-    color: 0xFFFFFF,
-    wireframe: true,
+    color: 0x332222,
+    //wireframe: true,
 })
 
 const planeMaterial = new three.MeshBasicMaterial({
@@ -58,12 +60,13 @@ const planeMaterial = new three.MeshBasicMaterial({
 
 render.setPixelRatio(window.devicePixelRatio);
 render.setSize(winWidth,winHeight);
-cam.position.setZ(30);
-cam.position.setY(CAM_BASE_Y);
-//cam.rotation.x = CAM_BASE_ANGLE;
-cam.rotateX(degToRad(Math.atan((CAM_BASE_Y-10)/SUN_POS.z)))
 
-console.log(cam.rotation.x/Math.rad)
+//Camera
+cam.position.setZ(CAM_Z);
+cam.position.setY(CAM_BASE_Y);
+cam.rotation.x = -Math.PI/2+Math.atan((CAM_BASE_Y-SUN_POS.y)/Math.abs(SUN_POS.z)+CAM_Z);
+console.log(radToDeg(-Math.PI/2+Math.atan((CAM_BASE_Y-SUN_POS.y)/(SUN_POS.z+CAM_Z))))
+
 render.render(scene, cam);
 
 
@@ -110,7 +113,7 @@ var geomPyr = new three.ConeGeometry(10, 20,3);
 var pyr = new three.Mesh(geomPyr,matPyrEmm);
 pyr.position.set(20,10,-50);
 
-
+var lines = new three.LineSegments
 //Placement des pyramides
 var angle = 0;
 var rotation = 0;
@@ -136,7 +139,7 @@ for(j = 1;j<=NB_ROWS;j++){
     
         scene.add(pyr)
     }
-    pyr_nb+=5;
+    pyr_nb+=4;
 }
 
 
@@ -145,7 +148,7 @@ for(j = 1;j<=NB_ROWS;j++){
 const ambient = new three.AmbientLight(0xFFFFFF);
 
 //Grille
-const gridHelper = new three.GridHelper(GRID_SIZE, 10, 0xFF0000, 0xFF0000)
+const gridHelper = new three.GridHelper(GRID_SIZE, 20, 0xFF0000, 0xFF0000)
 scene.add(gridHelper)
 
 //Axes
@@ -167,7 +170,7 @@ function moveCam(){
         return
     }
     cam.position.y = CAM_BASE_Y + t*SCROLL_COEFF *-1;
-    cam.rotation.x = CAM_BASE_ANGLE + t*ROTATE_COEFF*1
+    cam.rotation.x = -Math.PI/2+Math.atan((CAM_BASE_Y-SUN_POS.y)/Math.abs(SUN_POS.z)+CAM_Z)+t*ROTATE_COEFF;
     console.log(document.documentElement.scrollHeight - document.documentElement.clientHeight);
 
 }
