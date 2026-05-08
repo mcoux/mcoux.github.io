@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { MathUtils } from 'three';
 import './index.css'
+import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 
 import * as three from 'three'
 import { EffectComposer, RenderPass } from 'three/examples/jsm/Addons.js';
@@ -29,6 +30,7 @@ const MAX_HEIGHT = 20;
 const MIN_HEIGHT = 10;
 const MAX_WIDTH = 10;
 const MIN_WIDTH = 5;
+var pyr_list = [];
 //Camera
 const CAM_BASE_Y = 30;
 const CAM_Z = 100;
@@ -65,22 +67,10 @@ render.setSize(winWidth,winHeight);
 cam.position.setZ(CAM_Z);
 cam.position.setY(CAM_BASE_Y);
 cam.rotation.x = -Math.PI/2+Math.atan((CAM_BASE_Y-SUN_POS.y)/Math.abs(SUN_POS.z)+CAM_Z);
-console.log(radToDeg(-Math.PI/2+Math.atan((CAM_BASE_Y-SUN_POS.y)/(SUN_POS.z+CAM_Z))))
 
 render.render(scene, cam);
 
 
-//BloomRenderer
-const bloomRender = new RenderPass(scene,cam);
-const bloomP = new UnrealBloomPass( new three.Vector2(winWidth,winHeight),1.5,0.4,0.85);
-bloomP.threshold = 1;
-bloomP.strength = 2;
-bloomP.radius = 0;
-const bloomComposer = new EffectComposer(render);
-bloomComposer.setSize(window.innerWidth, window.innerHeight);
-bloomComposer.renderToScreen = true;
-bloomComposer.addPass(bloomRender);
-bloomComposer.addPass(bloomP);
 
 //Soleil
 const sphere = new three.SphereGeometry(5);
@@ -137,7 +127,8 @@ for(j = 1;j<=NB_ROWS;j++){
         pyr.position.set(soleil.position.x-Math.sin(angle)*PYR_RADIUS*j,height/2,soleil.position.z-Math.cos(angle)*PYR_RADIUS*j)
         pyr.rotateY(rotation);
     
-        scene.add(pyr)
+        scene.add(pyr);
+        pyr_list.push(pyr);
     }
     pyr_nb+=4;
 }
@@ -171,12 +162,30 @@ function moveCam(){
     }
     cam.position.y = CAM_BASE_Y + t*SCROLL_COEFF *-1;
     cam.rotation.x = -Math.PI/2+Math.atan((CAM_BASE_Y-SUN_POS.y)/Math.abs(SUN_POS.z)+CAM_Z)+t*ROTATE_COEFF;
-    console.log(document.documentElement.scrollHeight - document.documentElement.clientHeight);
 
 }
 
 document.body.onscroll = moveCam;
 
+//Post Pro
+
+//BloomRenderer
+const renderer = new RenderPass(scene,cam);
+const bloomP = new UnrealBloomPass( new three.Vector2(winWidth,winHeight),1.5,0.4,0.85);
+bloomP.threshold = 1;
+bloomP.strength = 2;
+bloomP.radius = 0;
+
+//Outlines
+const outlines = new OutlinePass(new three.Vector2(window.innerWidth,window.innerHeight),scene,cam);
+outlines.selectedObjects = pyr_list;
+//Composer
+const composer = new EffectComposer(render);
+composer.setSize(window.innerWidth, window.innerHeight);
+composer.renderToScreen = true;
+composer.addPass(renderer);
+composer.addPass(bloomP);
+composer.addPass(outlines);
 
 
 function animate(){
@@ -186,7 +195,7 @@ function animate(){
     //controls.update();
 
     render.render(scene, cam);
-    bloomComposer.render();
+    composer.render();
 }
 
 animate()
