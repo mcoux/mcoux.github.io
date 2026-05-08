@@ -77,14 +77,12 @@ const sphere = new three.SphereGeometry(5);
 
 const matS = new three.MeshPhongMaterial(SUN_COLOR);
 matS.emissive.set(0xFFFFFF);
-matS.specular.set(0xFFFFFF);
 matS.shininess = 50;
 
 const matPyrEmm = new three.MeshPhongMaterial(SUN_COLOR);
 matPyrEmm.emissive.set(0xFFFFFF);
 matPyrEmm.specular.set(0xFFFFFF);
 matPyrEmm.shininess = 50;
-matPyrEmm.wireframe = true;
 
 const soleil = new three.Mesh(sphere,matS);
 soleil.position.set(SUN_POS.x,SUN_POS.y,SUN_POS.z);
@@ -167,7 +165,7 @@ function moveCam(){
 
 document.body.onscroll = moveCam;
 
-//Post Pro
+//Post Process
 
 //BloomRenderer
 const renderer = new RenderPass(scene,cam);
@@ -177,11 +175,12 @@ bloomP.strength = 2;
 bloomP.radius = 0;
 
 //Outlines
-const outlines = new OutlinePass(new three.Vector2(window.innerWidth,window.innerHeight),scene,cam);
+const outlines = new OutlinePass(new three.Vector2(winWidth,winHeight),scene,cam);
 outlines.selectedObjects = pyr_list;
+outlines.edgeStrength = 2.5;
 //Composer
 const composer = new EffectComposer(render);
-composer.setSize(window.innerWidth, window.innerHeight);
+composer.setSize(winWidth, winHeight);
 composer.renderToScreen = true;
 composer.addPass(renderer);
 composer.addPass(bloomP);
