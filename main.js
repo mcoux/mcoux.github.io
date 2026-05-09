@@ -20,8 +20,8 @@ const BG_COLOR = {color: 0x000000}
 
 //Variables géometrie
 const GRID_SIZE = 900;
-const SUN_POS = new three.Vector3(0,10,-60);   
-
+const SUN_POS = new three.Vector3(0,10,-500);   
+const PYRS_CENTER = new three.Vector3(0,10,-60);
 //Pyramides
 const BASE_PYR_NB = 10;
 const NB_ROWS = 7;
@@ -35,7 +35,7 @@ var pyr_list = [];
 
 //Camera
 const CAM_BASE_Y = 30;
-const CAM_Z = 100;
+const CAM_Z = 70;
 
 const SCROLL_COEFF = 0.01;
 const ROTATE_COEFF = 0.0001;
@@ -46,7 +46,7 @@ const winWidth = window.innerWidth;
 const winHeight = window.innerHeight;
 
 const scene = new three.Scene();
-const cam = new three.PerspectiveCamera(70, winWidth / winHeight, 0.1,1000);
+const cam = new three.PerspectiveCamera(80, winWidth / winHeight, 0.1,1000);
 const render = new three.WebGLRenderer({
     canvas : document.querySelector('#glcanvas'),
 });
@@ -54,7 +54,6 @@ const render = new three.WebGLRenderer({
 
 const pyrMaterial = new three.MeshBasicMaterial({
     color: 0x332222,
-    //wireframe: true,
 })
 
 const planeMaterial = new three.MeshBasicMaterial({
@@ -74,11 +73,10 @@ render.render(scene, cam);
 
 
 //Soleil
-const sphere = new three.SphereGeometry(5);
+const sphere = new three.SphereGeometry(50);
 
 const matS = new three.MeshPhongMaterial(SUN_COLOR);
-matS.emissive.set(0xFFFFFF);
-matS.shininess = 50;
+matS.emissive.set(0xDDDDDD);
 
 const matPyrEmm = new three.MeshPhongMaterial(SUN_COLOR);
 matPyrEmm.emissive.set(0xFFFFFF);
@@ -114,7 +112,7 @@ var j = 0;
 var pyr_nb = BASE_PYR_NB
 var width;
 for(j = 1;j<=NB_ROWS;j++){
-    base_angle = 2*Math.PI/pyr_nb;
+    base_angle = Math.PI/pyr_nb;
 
     for(i =0;i<pyr_nb;i++){        
         angle = i*base_angle + base_angle/2; // Little offset
@@ -123,7 +121,7 @@ for(j = 1;j<=NB_ROWS;j++){
         rotation = Math.random()*180;
         geomPyr = new three.ConeGeometry(width, height,3);
         pyr = new three.Mesh(geomPyr,pyrMaterial);
-        pyr.position.set(soleil.position.x-Math.sin(angle)*PYR_RADIUS*j,height/2,soleil.position.z-Math.cos(angle)*PYR_RADIUS*j)
+        pyr.position.set(PYRS_CENTER.x-Math.cos(angle)*PYR_RADIUS*j ,height/2,PYRS_CENTER.z-Math.sin(angle)*PYR_RADIUS*j)
         pyr.rotateY(rotation);
     
         scene.add(pyr);
@@ -142,8 +140,8 @@ const ambient = new three.AmbientLight(0xFFFFFF);
 // scene.add(gridHelper)
 
 //Axes
-const axesHelper = new three.AxesHelper( 5 );
-scene.add( axesHelper );
+// const axesHelper = new three.AxesHelper( 5 );
+// scene.add( axesHelper );
 
 
 //const controls = new OrbitControls(cam,render.domElement);
@@ -172,13 +170,14 @@ document.body.onscroll = moveCam;
 const renderer = new RenderPass(scene,cam);
 const bloomP = new UnrealBloomPass( new three.Vector2(winWidth,winHeight),1.5,0.4,0.85);
 bloomP.threshold = 1;
-bloomP.strength = 2;
-bloomP.radius = 0;
+bloomP.strength = 1;
+bloomP.radius = 1;
 
 //Outlines
 const outlines = new OutlinePass(new three.Vector2(winWidth,winHeight),scene,cam);
 outlines.selectedObjects = pyr_list;
 outlines.edgeStrength = 2.5;
+outlines.pulsePeriod =10;
 //Composer
 const composer = new EffectComposer(render);
 composer.setSize(winWidth, winHeight);
