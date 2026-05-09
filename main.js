@@ -31,6 +31,8 @@ const MIN_HEIGHT = 10;
 const MAX_WIDTH = 10;
 const MIN_WIDTH = 5;
 var pyr_list = [];
+
+
 //Camera
 const CAM_BASE_Y = 30;
 const CAM_Z = 100;
@@ -56,8 +58,7 @@ const pyrMaterial = new three.MeshBasicMaterial({
 })
 
 const planeMaterial = new three.MeshBasicMaterial({
-    color: 0xFF0000,
-    wireframe: true,
+    color: 0x999999,
 })
 
 render.setPixelRatio(window.devicePixelRatio);
@@ -89,12 +90,12 @@ soleil.position.set(SUN_POS.x,SUN_POS.y,SUN_POS.z);
 
 
 //Plan
-// const GeomP = new three.PlaneGeometry(200,200);
-// const matP = new three.MeshBasicMaterial(PLANE_COLOR);
-// const plane = new three.Mesh(GeomP, matP);
-// plane.rotateX(MathUtils.DEG2RAD*-90);
-// plane.material = planeMaterial;
-// scene.add( plane );
+const GeomP = new three.PlaneGeometry(GRID_SIZE,GRID_SIZE);
+const matP = new three.MeshBasicMaterial(PLANE_COLOR);
+const plane = new three.Mesh(GeomP, matP);
+plane.rotation.x = -Math.PI/2;
+plane.material = planeMaterial;
+scene.add( plane );
 
 //pyramide
 var geomPyr = new three.ConeGeometry(10, 20,3);
@@ -137,8 +138,8 @@ for(j = 1;j<=NB_ROWS;j++){
 const ambient = new three.AmbientLight(0xFFFFFF);
 
 //Grille
-const gridHelper = new three.GridHelper(GRID_SIZE, 20, 0xFF0000, 0xFF0000)
-scene.add(gridHelper)
+// const gridHelper = new three.GridHelper(GRID_SIZE, 20, 0xFF0000, 0xFF0000)
+// scene.add(gridHelper)
 
 //Axes
 const axesHelper = new three.AxesHelper( 5 );
