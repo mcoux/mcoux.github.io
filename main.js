@@ -8,7 +8,7 @@ import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 import * as three from 'three'
 import { EffectComposer, RenderPass } from 'three/examples/jsm/Addons.js';
 import { bloom } from 'three/examples/jsm/tsl/display/BloomNode.js';
-import { abs, cos, sin } from 'three/tsl';
+import { abs, color, cos, sin } from 'three/tsl';
 import { degToRad, radToDeg } from 'three/src/math/MathUtils.js';
 
 
@@ -19,7 +19,6 @@ const SUN_COLOR = {color: 0xFFFFFF}
 const BG_COLOR = {color: 0x000000}
 
 //Variables géometrie
-const GRID_SIZE = 900;
 const SUN_POS = new three.Vector3(0,10,-500);   
 const PYRS_CENTER = new three.Vector3(0,10,-60);
 //Pyramides
@@ -32,12 +31,18 @@ const MAX_WIDTH = 10;
 const MIN_WIDTH = 5;
 var pyr_list = [];
 
+//Plan
+const PLANE_X = 900;
+const PLANE_Y = 900;
 
+//Arrière plan
+const SKY_COLOR = {color: 0xFF0000};
+const SKY_SIZE = 2000;
 //Camera
-const CAM_BASE_Y = 30;
-const CAM_Z = 70;
+const CAM_BASE_Y = 40;
+const CAM_Z = 3;
 
-const SCROLL_COEFF = 0.01;
+const SCROLL_COEFF = 0.008;
 const ROTATE_COEFF = 0.0001;
 const MIN_DOCUMENT_HEIGHT = 1137;
 const CAM_BASE_ANGLE = -Math.PI/2;
@@ -46,7 +51,7 @@ const winWidth = window.innerWidth;
 const winHeight = window.innerHeight;
 
 const scene = new three.Scene();
-const cam = new three.PerspectiveCamera(80, winWidth / winHeight, 0.1,1000);
+const cam = new three.PerspectiveCamera(70, winWidth / winHeight, 0.1,1000);
 const render = new three.WebGLRenderer({
     canvas : document.querySelector('#glcanvas'),
 });
@@ -88,12 +93,19 @@ soleil.position.set(SUN_POS.x,SUN_POS.y,SUN_POS.z);
 
 
 //Plan
-const GeomP = new three.PlaneGeometry(GRID_SIZE,GRID_SIZE);
+const GeomP = new three.PlaneGeometry(PLANE_X,PLANE_Y);
 const matP = new three.MeshBasicMaterial(PLANE_COLOR);
 const plane = new three.Mesh(GeomP, matP);
 plane.rotation.x = -Math.PI/2;
 plane.material = planeMaterial;
 scene.add( plane );
+
+//Background
+const sky = new three.GridHelper(SKY_SIZE, 70, 0xFF0000, 0xFF0000)
+sky.position.z = -500;
+sky.rotateX(Math.PI/2);
+scene.add(sky);
+
 
 //pyramide
 var geomPyr = new three.ConeGeometry(10, 20,3);
@@ -101,6 +113,10 @@ var pyr = new three.Mesh(geomPyr,matPyrEmm);
 pyr.position.set(20,10,-50);
 
 var lines = new three.LineSegments
+
+
+
+
 //Placement des pyramides
 var angle = 0;
 var rotation = 0;
