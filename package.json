@@ -1,14 +1,11 @@
 {
   "dependencies": {
-    "gh-pages": "^6.3.0",
     "three": "^0.184.0"
   },
   "devDependencies": {
     "vite": "^6.4.2"
   },
   "scripts": {
-    "dev": "npx vite",
-    "build": "npx vite build",
-    "deploy": "gh-pages -d dist"
+    "build":"npx vite"
   }
 }
