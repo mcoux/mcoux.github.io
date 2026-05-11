@@ -13,7 +13,7 @@ import { degToRad, radToDeg } from 'three/src/math/MathUtils.js';
 
 
 //Couleurs/Mats
-const PLANE_COLOR = {color: 0xAAAAAA}
+const PLANE_COLOR = {color: 0x555555}
 const MTN_COLOR = {color: 0xBBBBBB}
 const SUN_COLOR = {color: 0xFFFFFF}
 const BG_COLOR = {color: 0x000000}
@@ -21,9 +21,10 @@ const BG_COLOR = {color: 0x000000}
 //Variables géometrie
 const SUN_POS = new three.Vector3(0,10,-500);   
 const PYRS_CENTER = new three.Vector3(0,10,-60);
+
 //Pyramides
 const BASE_PYR_NB = 10;
-const NB_ROWS = 7;
+const NB_ROWS = 10;
 const PYR_RADIUS = 50;
 const MAX_HEIGHT = 20;
 const MIN_HEIGHT = 10;
@@ -32,7 +33,7 @@ const MIN_WIDTH = 5;
 var pyr_list = [];
 
 //Plan
-const PLANE_X = 900;
+const PLANE_X = 1300;
 const PLANE_Y = 900;
 
 //Arrière plan
@@ -61,12 +62,10 @@ const pyrMaterial = new three.MeshBasicMaterial({
     color: 0x332222,
 })
 
-const planeMaterial = new three.MeshBasicMaterial({
-    color: 0x999999,
-})
+
 
 render.setPixelRatio(window.devicePixelRatio);
-render.setSize(winWidth,winHeight);
+render.setSize(winWidth,winHeight,false);
 
 //Camera
 cam.position.setZ(CAM_Z);
@@ -97,7 +96,7 @@ const GeomP = new three.PlaneGeometry(PLANE_X,PLANE_Y);
 const matP = new three.MeshBasicMaterial(PLANE_COLOR);
 const plane = new three.Mesh(GeomP, matP);
 plane.rotation.x = -Math.PI/2;
-plane.material = planeMaterial;
+plane.material = matP;
 scene.add( plane );
 
 //Background
@@ -183,7 +182,8 @@ document.body.onscroll = moveCam;
 //Post Process
 
 //BloomRenderer
-const renderer = new RenderPass(scene,cam);
+const renderPass = new RenderPass(scene,cam);
+
 const bloomP = new UnrealBloomPass( new three.Vector2(winWidth,winHeight),1.5,0.4,0.85);
 bloomP.threshold = 1;
 bloomP.strength = 1;
@@ -198,7 +198,7 @@ outlines.pulsePeriod =10;
 const composer = new EffectComposer(render);
 composer.setSize(winWidth, winHeight);
 composer.renderToScreen = true;
-composer.addPass(renderer);
+composer.addPass(renderPass);
 composer.addPass(bloomP);
 composer.addPass(outlines);
 
@@ -208,7 +208,7 @@ function animate(){
 
 
     //controls.update();
-
+    render.setSize(window.innerWidth,window.innerHeight)
     render.render(scene, cam);
     composer.render();
 }
