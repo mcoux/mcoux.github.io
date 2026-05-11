@@ -13,11 +13,9 @@ canvas {
 
 
 main {
-  width: 100vw;
   color: black;
   z-index: 99;
   position: absolute;
-  width: 100%;
   margin: 0px auto;
   padding: 100px 0px;
   padding-left: 40px;
