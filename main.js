@@ -1,15 +1,12 @@
-import { FunctionOverloadingNode, PointLightHelper } from 'three/webgpu';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { MathUtils } from 'three';
 import './index.css'
 import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 
-import * as three from 'three'
+import * as three from 'three';
 import { EffectComposer, RenderPass } from 'three/examples/jsm/Addons.js';
-import { bloom } from 'three/examples/jsm/tsl/display/BloomNode.js';
-import { abs, color, cos, sin } from 'three/tsl';
-import { degToRad, radToDeg } from 'three/src/math/MathUtils.js';
+// import { bloom } from 'three/examples/jsm/tsl/display/BloomNode.js';
+// import { abs, color, cos, sin } from 'three/tsl';
+// import { degToRad, radToDeg } from 'three/src/math/MathUtils.js';
 
 
 //Couleurs/Mats
