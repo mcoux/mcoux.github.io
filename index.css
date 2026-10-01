@@ -149,6 +149,12 @@ a {
     padding:1em 2em 1em 2em;
     display: block;
 }
+
+.nav-link:hover{
+  cursor: pointer;
+
+}
+
 .nav-list{
     display: flex;
     list-style-type: none;
@@ -176,4 +182,9 @@ a {
 
 .tab.default-tab {
   display: block;
+}
+
+button {
+
+
 }
